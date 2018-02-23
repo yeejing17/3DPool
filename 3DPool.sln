@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DPool", "Assembly-CSharp.csproj", "{C6369C64-316D-C788-7D6D-623C53A0E416}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DPool", "Assembly-CSharp-Editor.csproj", "{F9EB4480-A730-951C-83D9-42D41B56821A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6369C64-316D-C788-7D6D-623C53A0E416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6369C64-316D-C788-7D6D-623C53A0E416}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6369C64-316D-C788-7D6D-623C53A0E416}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6369C64-316D-C788-7D6D-623C53A0E416}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9EB4480-A730-951C-83D9-42D41B56821A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9EB4480-A730-951C-83D9-42D41B56821A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9EB4480-A730-951C-83D9-42D41B56821A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9EB4480-A730-951C-83D9-42D41B56821A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
