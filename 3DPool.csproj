@@ -283,6 +283,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Imported\Clock\Scripts\Clock.cs" />
+    <Compile Include="Assets\Scripts\Ball.cs" />
+    <Compile Include="Assets\Scripts\ControllerGrabObject.cs" />
+    <Compile Include="Assets\Scripts\CueBall.cs" />
+    <Compile Include="Assets\Scripts\GameHandler.cs" />
+    <Compile Include="Assets\Scripts\LaserPointer.cs" />
+    <Compile Include="Assets\Scripts\NineBallRules.cs" />
+    <Compile Include="Assets\Scripts\ViveControllerInputTest.cs" />
     <Compile Include="Assets\SteamVR\Extras\SteamVR_GazeTracker.cs" />
     <Compile Include="Assets\SteamVR\Extras\SteamVR_LaserPointer.cs" />
     <Compile Include="Assets\SteamVR\Extras\SteamVR_Teleporter.cs" />

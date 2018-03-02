@@ -21,64 +21,64 @@ public class NineBallRules : MonoBehaviour {
 		
 	}
 
-    void hitCheck()
-    {
-        firstBallHit = // which ball collider trigger with cue ball first
+    //void hitCheck()
+    //{
+    //    firstBallHit = // which ball collider trigger with cue ball first
 
 
-        if ()
-        { // holeCollider collides with any ball
-          //remove the ball from scene
-            ballPocketed.Add(); // add the ball number to this list
-        }
+    //    if ()
+    //    { // holeCollider collides with any ball
+    //      //remove the ball from scene
+    //        ballPocketed.Add(); // add the ball number to this list
+    //    }
 
-        //stops until all ball stop moving
-        ruleCheck();
-    }
+    //    //stops until all ball stop moving
+    //    ruleCheck();
+    //}
 
-    void ruleCheck()
-    {
-        // Check if the player hit the lowestNumberBall 
-        if (firstBallHit != lowestNumberBall)
-            foul = true;
+    //void ruleCheck()
+    //{
+    //    // Check if the player hit the lowestNumberBall 
+    //    if (firstBallHit != lowestNumberBall)
+    //        foul = true;
 
-        // Check if player pockets any ball
-        if (ballPocketed.Count == 0)
-            miss = true;
-        else if (ballPocketed.Contains(0))
-        {// if pocketed, check whether the cue ball is pocketed
-            foul = true;
-            ballPocketed.Remove(0);
-        }
+    //    // Check if player pockets any ball
+    //    if (ballPocketed.Count == 0)
+    //        miss = true;
+    //    else if (ballPocketed.Contains(0))
+    //    {// if pocketed, check whether the cue ball is pocketed
+    //        foul = true;
+    //        ballPocketed.Remove(0);
+    //    }
 
-        // Check if 9 ball is pocketed
-        if (ballPocketed.Contains(9))
-        {
-            if (foul)
-            { // if pocketed, but player foul
-              // remove all ballPocketed from ballOnTable except 9
-                ballPocketed.Remove(9);
-                foreach (int number in ballPocketed)
-                    ballOnTable.Remove(number);
-                // place 9 ball on foot spot
-                // if another is on foot spot, put as near to it as possible
-            }
-            else // if 9 ball pocketed and player did not foul, the player win the game
-                win;
-        }
-        else
-        {
-            // remove all ballPocketed from ballOnTable
-            foreach (int number in ballPocketed)
-                ballOnTable.Remove(number);
-        }
+    //    // Check if 9 ball is pocketed
+    //    if (ballPocketed.Contains(9))
+    //    {
+    //        if (foul)
+    //        { // if pocketed, but player foul
+    //          // remove all ballPocketed from ballOnTable except 9
+    //            ballPocketed.Remove(9);
+    //            foreach (int number in ballPocketed)
+    //                ballOnTable.Remove(number);
+    //            // place 9 ball on foot spot
+    //            // if another is on foot spot, put as near to it as possible
+    //        }
+    //        else // if 9 ball pocketed and player did not foul, the player win the game
+    //            win;
+    //    }
+    //    else
+    //    {
+    //        // remove all ballPocketed from ballOnTable
+    //        foreach (int number in ballPocketed)
+    //            ballOnTable.Remove(number);
+    //    }
 
-        // find the smallest number in ballOnTable, assign the number to lowestNumberBall
-        ballOnTable.Sort();
-        lowestNumberBall = ballOnTable[0];
+    //    // find the smallest number in ballOnTable, assign the number to lowestNumberBall
+    //    ballOnTable.Sort();
+    //    lowestNumberBall = ballOnTable[0];
 
-        // reset for next play
-        ballOnTable.Clear();
-        firstBallHit = -1;
-    }
+    //    // reset for next play
+    //    ballOnTable.Clear();
+    //    firstBallHit = -1;
+    //}
 }
