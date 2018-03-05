@@ -41,14 +41,15 @@ public class GameHandler : MonoBehaviour {
 
 			case GameState.Player1Turn:
 
-				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
+				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
 
 				// TODO: enable collision between cue and cueBall during GameState.Player1Turn
 
 				if (true /*cue hit cueBall*/)
 				{
 					gameState = GameState.Pending1Turn;
-					allBallsStopMoving = false;
+                    cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
+                    allBallsStopMoving = false;
 				}
 				break;
 
@@ -95,14 +96,15 @@ public class GameHandler : MonoBehaviour {
 
 			case GameState.Player2Turn:
 
-				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
+				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
 
 				// TODO: enable collision between cue and cueBall during GameState.Player2Turn
 
 				if (true /*cue hit cueBall*/)
 				{
 					gameState = GameState.Pending2Turn;
-					allBallsStopMoving = false;
+                    cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
+                    allBallsStopMoving = false;
 				}
 				break;
 
