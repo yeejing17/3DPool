@@ -15,12 +15,15 @@ public class CueBall : MonoBehaviour
 
     public int firstBallHit = 1;
 
+	Collider m_Collider;
+
     // Use this for initialization
     void Start()
     {
         // initialize variables
         hitState = HitState.Idle;
         firstBallHit = 1;
+		m_Collider = GetComponent<Collider>();
     }
 
     // Update is called once per frame
@@ -80,4 +83,8 @@ public class CueBall : MonoBehaviour
                     hitState = HitState.Foul;
         }
     }
+	public void returnStartingPosition()
+	{
+		transform.position = startingPosition;
+	}
 }

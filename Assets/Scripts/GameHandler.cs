@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,21 +6,22 @@ public class GameHandler : MonoBehaviour {
 
 	enum GameState { AwaitingStart, Player1Turn, Player2Turn, Pending1Turn, Pending2Turn };
 
-	public GameObject cueBall;		// might switch type to CueBall
+	public CueBall cueBall;		// might switch type to CueBall
 	public GameObject ballGroup;
+	public CueStick cueStick;
 
 	GameState gameState;
 	bool allBallsStopMoving;
-
 
 	// Use this for initialization
 	void Start ()
 	{
 		// initialize variables
+
 		gameState = GameState.AwaitingStart;
 		allBallsStopMoving = true;
 	}
-	
+
 	// Update is called once per frame
 	void Update ()
 	{
@@ -29,9 +30,12 @@ public class GameHandler : MonoBehaviour {
 		{
 			case GameState.AwaitingStart:
 
-				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Idle;
+				cueBall.GetComponent<CueBall> ().hitState = CueBall.HitState.Idle;
 
 				// TODO: disable all ball interactions with cue during GameState.AwaitingStart
+				//done	
+
+				cueStick.GetComponent<CueStick> ().m_disableCollider ();
 
 				if (true /*confirm start game*/)
 				{
@@ -44,12 +48,14 @@ public class GameHandler : MonoBehaviour {
 				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
 
 				// TODO: enable collision between cue and cueBall during GameState.Player1Turn
+				//done
+				cueStick.GetComponent<CueStick>().m_enableCollider();
 
-				if (true /*cue hit cueBall*/)
+				if (cueStick.GetComponent<CueStick>().hittedCueBall()) //TODO: check if cue hits cue ball: done
 				{
 					gameState = GameState.Pending1Turn;
-                    cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
-                    allBallsStopMoving = false;
+					cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
+					allBallsStopMoving = false;
 				}
 				break;
 
@@ -62,18 +68,26 @@ public class GameHandler : MonoBehaviour {
 					switch ((cueBall.GetComponent<CueBall>().hitState))
 					{
 						case CueBall.HitState.Hit:
-							if (true /*TODO: Set if player1 win game*/)
+							
+							bool allPocketed = true;
+							Ball[] all9balls = ballGroup.GetComponentsInChildren<Ball>();
+							foreach (Ball ball in all9balls) {
+								allPocketed = allPocketed & ball.GetComponent<Ball> ().isPocketed; //if all balls are pocketed: allPocketed = 1*1*1*1.... = 1
+							}
+
+							if (allPocketed) /*TODO: Set if player1 win game*/
 							{
 								// TODO: Announce win condition during GameState.Pending1Turn && CueBall.HitState.Hit
+								print("player 1 wins!");
 								ResetGame();
 								gameState = GameState.AwaitingStart;
-
-								
+							
+							
 							}
 							else
 							{
 								gameState = GameState.Player1Turn;
-
+										
 							}
 
 							break;
@@ -84,13 +98,13 @@ public class GameHandler : MonoBehaviour {
 
 						case CueBall.HitState.Foul:
 							gameState = GameState.Player2Turn;
+							
 							// TODO: Set condition where player 2 can place cueBall during GameState.Pending1Turn && CueBall.HitState.Foul
 							break;
 
 						default:
 							break;
 					}
-
 				}
 				break;
 
@@ -99,12 +113,13 @@ public class GameHandler : MonoBehaviour {
 				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
 
 				// TODO: enable collision between cue and cueBall during GameState.Player2Turn
-
-				if (true /*cue hit cueBall*/)
+				//done
+				cueStick.GetComponent<CueStick> ().m_enableCollider ();
+				if (cueStick.GetComponent<CueStick>().hittedCueBall()) //done TODO: check cue hits cue ball
 				{
 					gameState = GameState.Pending2Turn;
-                    cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
-                    allBallsStopMoving = false;
+					cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
+					allBallsStopMoving = false;
 				}
 				break;
 
@@ -117,9 +132,18 @@ public class GameHandler : MonoBehaviour {
 					switch ((cueBall.GetComponent<CueBall>().hitState))
 					{
 						case CueBall.HitState.Hit:
-							if (true /*TODO: Set if player2 win game*/)
+
+							bool allPocketed = true;
+							Ball[] all9balls = ballGroup.GetComponentsInChildren<Ball>();
+							foreach (Ball ball in all9balls) {
+								allPocketed = allPocketed & ball.GetComponent<Ball> ().isPocketed; //if all balls are pocketed: allPocketed = 1*1*1*1.... = 1
+							}
+
+							if (allPocketed) /*TODO: Set if player2 win game*/
 							{
 								// TODO: Announce win condition during GameState.Pending2Turn && CueBall.HitState.Hit
+								//done
+								print("player 2 wins!");
 								ResetGame();
 								gameState = GameState.AwaitingStart;
 							}
@@ -145,12 +169,19 @@ public class GameHandler : MonoBehaviour {
 
 				}
 				break;
-
 		}
 	}
 
 	void ResetGame()
 	{
+		//define starting position in ball.cs?
+
 		// TODO: reset game and ball positions after win condition
+		Ball[] all9balls = ballGroup.GetComponentsInChildren<Ball>();
+		foreach (Ball ball in all9balls){
+			ball.GetComponent<Ball> ().returnStartingPosition();
+		}
+		cueBall.GetComponent<CueBall> ().returnStartingPosition();
+		gameState = GameState.AwaitingStart;
 	}
 }

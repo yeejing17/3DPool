@@ -14,6 +14,7 @@ public class Ball : MonoBehaviour
     void Start()
     {
         isPocketed = false;
+		startingPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -30,4 +31,10 @@ public class Ball : MonoBehaviour
         if (collision.gameObject.tag == "HoleCollider")
             isPocketed = true;
     }
+
+	public void returnStartingPosition()
+	{
+		transform.position = startingPosition;
+	}
+		
 }
