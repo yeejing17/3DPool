@@ -25,10 +25,10 @@ public class Ball : MonoBehaviour
             this.gameObject.SetActive(false);
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider col)
     {
 
-        if (collision.gameObject.tag == "HoleCollider")
+        if (col.gameObject.tag == "HoleCollider")
             isPocketed = true;
     }
 

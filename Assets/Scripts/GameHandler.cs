@@ -8,7 +8,7 @@ public class GameHandler : MonoBehaviour {
 
 	public CueBall cueBall;		// might switch type to CueBall
 	public GameObject ballGroup;
-	public CueStick cueStick;
+	//public CueStick cueStick;
 
 	GameState gameState;
 	bool allBallsStopMoving;
@@ -25,6 +25,8 @@ public class GameHandler : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+		allBallsStopMoving = CheckAllBallsNotMoving();
+
 		// gameState changes
 		switch (gameState)
 		{
@@ -35,7 +37,7 @@ public class GameHandler : MonoBehaviour {
 				// TODO: disable all ball interactions with cue during GameState.AwaitingStart
 				//done	
 
-				cueStick.GetComponent<CueStick> ().m_disableCollider ();
+				//cueStick.GetComponent<CueStick> ().m_disableCollider ();
 
 				if (true /*confirm start game*/)
 				{
@@ -49,9 +51,10 @@ public class GameHandler : MonoBehaviour {
 
 				// TODO: enable collision between cue and cueBall during GameState.Player1Turn
 				//done
-				cueStick.GetComponent<CueStick>().m_enableCollider();
+				//cueStick.GetComponent<CueStick>().m_enableCollider();	// WTF
 
-				if (cueStick.GetComponent<CueStick>().hittedCueBall()) //TODO: check if cue hits cue ball: done
+				//if (cueStick.GetComponent<CueStick>().hittedCueBall()) //TODO: check if cue hits cue ball: done
+				if (cueBall.GetComponent<CueBall>().hitCue == true)
 				{
 					gameState = GameState.Pending1Turn;
 					cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
@@ -114,8 +117,8 @@ public class GameHandler : MonoBehaviour {
 
 				// TODO: enable collision between cue and cueBall during GameState.Player2Turn
 				//done
-				cueStick.GetComponent<CueStick> ().m_enableCollider ();
-				if (cueStick.GetComponent<CueStick>().hittedCueBall()) //done TODO: check cue hits cue ball
+				//cueStick.GetComponent<CueStick> ().m_enableCollider ();
+				if (cueBall.GetComponent<CueBall>().hitCue == true) //done TODO: check cue hits cue ball
 				{
 					gameState = GameState.Pending2Turn;
 					cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
@@ -170,6 +173,8 @@ public class GameHandler : MonoBehaviour {
 				}
 				break;
 		}
+
+		
 	}
 
 	void ResetGame()
@@ -183,5 +188,22 @@ public class GameHandler : MonoBehaviour {
 		}
 		cueBall.GetComponent<CueBall> ().returnStartingPosition();
 		gameState = GameState.AwaitingStart;
+	}
+
+	bool CheckAllBallsNotMoving()
+	{
+		for (int i = 0; i < ballGroup.transform.childCount; i++)
+		{
+			//print(i + ", " + ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude);
+			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.01)
+			{
+				return false;
+			}
+			else
+			{
+				ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+			}
+		}
+		return true;
 	}
 }

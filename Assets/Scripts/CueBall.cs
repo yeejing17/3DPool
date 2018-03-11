@@ -8,6 +8,7 @@ public class CueBall : MonoBehaviour
     public enum HitState { Idle, Before, Miss, Foul, Hit };
 
     public GameObject ballGroup;
+	public GameObject cueStick;
 
     public Vector3 startingPosition;
 
@@ -15,20 +16,31 @@ public class CueBall : MonoBehaviour
 
     public int firstBallHit = 1;
 
+	public bool hitCue;
+
 	Collider m_Collider;
 
-    // Use this for initialization
-    void Start()
+	private float cueStickVelocity;
+	private Vector3 cueStickLastPosition;
+
+	// Use this for initialization
+	void Start()
     {
         // initialize variables
         hitState = HitState.Idle;
         firstBallHit = 1;
 		m_Collider = GetComponent<Collider>();
+		hitCue = false;
+
+		cueStickLastPosition = cueStick.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
+		//print(hitCue);
+		
+
         //  TODO: change hitState based on rules and first ball hit (or not)
         switch (hitState)
         {
@@ -64,21 +76,49 @@ public class CueBall : MonoBehaviour
             default:
                 break;
         }
-    }
 
-    void OnCollisionEnter(Collision collision)
+		cueStickLastPosition = cueStick.transform.position;
+	}
+
+	private void OnTriggerEnter(Collider col)
+	{
+		if(col.gameObject.tag == "HoleCollider")
+		{
+			hitState = HitState.Foul;
+			this.gameObject.SetActive(false);
+		}
+
+		if(col.gameObject == cueStick)
+		{
+			hitCue = true;
+
+			Vector3 upVector = col.transform.up;
+			Vector3 upVector2D = new Vector3(upVector.x, 0, upVector.z);
+
+			cueStickVelocity = (this.transform.position - cueStickLastPosition).magnitude;
+
+			this.GetComponent<Rigidbody>().velocity = (upVector2D * cueStickVelocity);
+
+		}
+	}
+
+	void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "HoleCollider")
-        {
-            hitState = HitState.Foul;
-            this.gameObject.SetActive(false);
-        }
+		//// collides with cue
+		//if (collision.gameObject.name == "CueStick")
+		//{
+		//	hitCue = true;
+		//}
 
-        if (hitState == HitState.Miss)
+
+		// collides with number ball
+        if (hitState == HitState.Before)
         {
-            if (collision.GetType() == typeof(SphereCollider))
-                if (collision.gameObject.GetComponent<Ball>().ballNumber == firstBallHit)
-                    hitState = HitState.Hit;
+			if (collision.transform.GetComponent<Ball>())
+				if (collision.transform.GetComponent<Ball>().ballNumber == firstBallHit)
+				{
+					hitState = HitState.Hit;
+				}
                 else
                     hitState = HitState.Foul;
         }
