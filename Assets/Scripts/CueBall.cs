@@ -32,6 +32,8 @@ public class CueBall : MonoBehaviour
 		m_Collider = GetComponent<Collider>();
 		hitCue = false;
 
+		startingPosition = this.transform.position;
+
 		cueStickLastPosition = cueStick.transform.position;
     }
 
@@ -39,7 +41,7 @@ public class CueBall : MonoBehaviour
     void Update()
     {
 		//print(hitCue);
-		
+		print(hitState);
 
         //  TODO: change hitState based on rules and first ball hit (or not)
         switch (hitState)
@@ -60,7 +62,9 @@ public class CueBall : MonoBehaviour
 
             case HitState.Miss:
                 // if hit, change status to hit
+				
                 // if touch hole collider, foul
+
                 // if touch any other ball, foul
                 break;
 
@@ -85,7 +89,8 @@ public class CueBall : MonoBehaviour
 		if(col.gameObject.tag == "HoleCollider")
 		{
 			hitState = HitState.Foul;
-			this.gameObject.SetActive(false);
+			//this.gameObject.SetActive(false);
+			this.gameObject.GetComponent<MeshRenderer>().enabled = false;
 		}
 
 		if(col.gameObject == cueStick)
@@ -112,7 +117,7 @@ public class CueBall : MonoBehaviour
 
 
 		// collides with number ball
-        if (hitState == HitState.Before)
+        if (hitState == HitState.Miss)
         {
 			if (collision.transform.GetComponent<Ball>())
 				if (collision.transform.GetComponent<Ball>().ballNumber == firstBallHit)
