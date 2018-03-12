@@ -10,6 +10,8 @@ public class Ball : MonoBehaviour
 
     public bool isPocketed;
 
+	public float velocity;
+
     // Use this for initialization
     void Start()
     {
@@ -23,6 +25,8 @@ public class Ball : MonoBehaviour
         // TODO: set condition changes when ball is pocketed or not when trigger with hole collider
         if (isPocketed)
             this.gameObject.SetActive(false);
+
+		velocity = this.GetComponent<Rigidbody>().velocity.magnitude;
     }
 
     void OnTriggerEnter(Collider col)

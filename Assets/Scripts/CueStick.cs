@@ -53,30 +53,29 @@ public class CueStick : MonoBehaviour {
 	//	return hittedCue;
 	//}
 
-	private Vector3 upVector;
-	private float velocity;
-	private float maxVelocity;
+	//private Vector3 upVector;
+	//private float velocity;
+	//private float maxVelocity;
 
-	private Vector3 lastPosition;
+	//private Vector3 lastPosition;
 
-	private void Start()
-	{
-		lastPosition = this.transform.position;
-		maxVelocity = 0;
-	}
+	//private void Start()
+	//{
+	//	lastPosition = this.transform.position;
+	//	maxVelocity = 0;
+	//}
 
-	private void Update()
-	{
-		upVector = this.transform.up;
+	//private void Update()
+	//{
+	//	upVector = this.transform.up;
 
 
-		velocity = (this.transform.position - lastPosition).magnitude;
-		if (velocity > maxVelocity)
-		{
-			maxVelocity = velocity;
-		}
-		lastPosition = this.transform.position;
-		print(maxVelocity);
-	}
+	//	velocity = (this.transform.position - lastPosition).magnitude;
+	//	if (velocity > maxVelocity)
+	//	{
+	//		maxVelocity = velocity;
+	//	}
+	//	lastPosition = this.transform.position;
+	//}
 
 }

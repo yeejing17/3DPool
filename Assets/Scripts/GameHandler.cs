@@ -25,6 +25,7 @@ public class GameHandler : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+		print(gameState);
 		allBallsStopMoving = CheckAllBallsNotMoving();
 
 		// gameState changes
@@ -109,6 +110,7 @@ public class GameHandler : MonoBehaviour {
 							break;
 					}
 				}
+				cueBall.GetComponent<CueBall>().hitCue = false;
 				break;
 
 			case GameState.Player2Turn:
@@ -171,6 +173,8 @@ public class GameHandler : MonoBehaviour {
 					}
 
 				}
+
+				cueBall.GetComponent<CueBall>().hitCue = false;
 				break;
 		}
 
@@ -192,18 +196,29 @@ public class GameHandler : MonoBehaviour {
 
 	bool CheckAllBallsNotMoving()
 	{
+		bool result = true;
+
+		if (cueBall.GetComponent<Rigidbody>().velocity.magnitude > 0.05)
+		{
+			result = false;
+		}
+		else
+		{
+			cueBall.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+		}
+
 		for (int i = 0; i < ballGroup.transform.childCount; i++)
 		{
 			//print(i + ", " + ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude);
-			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.01)
+			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.05)
 			{
-				return false;
+				result = false;
 			}
 			else
 			{
 				ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
 			}
 		}
-		return true;
+		return result;
 	}
 }
