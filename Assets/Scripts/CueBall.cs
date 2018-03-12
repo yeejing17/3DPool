@@ -5,7 +5,7 @@ using UnityEngine;
 public class CueBall : MonoBehaviour
 {
 
-    public enum HitState { Idle, Before, Miss, Foul, Hit };
+    public enum HitState { Idle, Before, Miss, Foul, Hit, HitPocketed };
 
     public GameObject ballGroup;
 	public GameObject cueStick;
@@ -22,6 +22,8 @@ public class CueBall : MonoBehaviour
 
 	private float cueStickVelocity;
 	private Vector3 cueStickLastPosition;
+
+	public float velocity;
 
 	// Use this for initialization
 	void Start()
@@ -40,24 +42,27 @@ public class CueBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		//print(hitCue);
+		//print("HitCue: " + hitCue);
 		print(hitState);
+		velocity = this.GetComponent<Rigidbody>().velocity.magnitude;
 
-        //  TODO: change hitState based on rules and first ball hit (or not)
-        switch (hitState)
+		var ballsOnTable = GameObject.FindGameObjectsWithTag("NumberBall");
+		firstBallHit = 15;
+		foreach (var ball in ballsOnTable)
+		{
+			if (ball.active && firstBallHit > ball.GetComponent<Ball>().ballNumber)
+				firstBallHit = ball.GetComponent<Ball>().ballNumber;
+		}
+
+		//  TODO: change hitState based on rules and first ball hit (or not)
+		switch (hitState)
         {
             case HitState.Idle:
                 // waiting game start, do nothing
                 break;
 
             case HitState.Before:
-                var ballsOnTable = GameObject.FindGameObjectsWithTag("NumberBall");
-                firstBallHit = 15;
-                foreach (var ball in ballsOnTable)
-                {
-                    if (ball.active && firstBallHit > ball.GetComponent<Ball>().ballNumber)
-                        firstBallHit = ball.GetComponent<Ball>().ballNumber;
-                }
+
                 break;
 
             case HitState.Miss:
@@ -76,6 +81,10 @@ public class CueBall : MonoBehaviour
                 // if touch hole collider, foul
                 // do nothing, waiting ball stopped
                 break;
+
+			case HitState.HitPocketed:
+
+				break;
                 
             default:
                 break;
@@ -93,7 +102,7 @@ public class CueBall : MonoBehaviour
 			this.gameObject.GetComponent<MeshRenderer>().enabled = false;
 		}
 
-		if(col.gameObject == cueStick)
+		if(col.gameObject == cueStick && hitCue == false)
 		{
 			hitCue = true;
 

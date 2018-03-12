@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-
+	public GameObject cueBall;
     public int ballNumber;
     public Vector3 startingPosition;
 
@@ -33,7 +33,11 @@ public class Ball : MonoBehaviour
     {
 
         if (col.gameObject.tag == "HoleCollider")
-            isPocketed = true;
+		{
+			isPocketed = true;
+			cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.HitPocketed;
+		}
+            
     }
 
 	public void returnStartingPosition()

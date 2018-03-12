@@ -8,10 +8,9 @@ public class GameHandler : MonoBehaviour {
 
 	public CueBall cueBall;		// might switch type to CueBall
 	public GameObject ballGroup;
-	//public CueStick cueStick;
 
 	GameState gameState;
-	bool allBallsStopMoving;
+	public bool allBallsStopMoving;	// change to private
 
 	// Use this for initialization
 	void Start ()
@@ -77,7 +76,7 @@ public class GameHandler : MonoBehaviour {
 				{
 					switch ((cueBall.GetComponent<CueBall>().hitState))
 					{
-						case CueBall.HitState.Hit:
+						case CueBall.HitState.HitPocketed:
 							
 							bool allPocketed = true;
 							Ball[] all9balls = ballGroup.GetComponentsInChildren<Ball>();
@@ -102,6 +101,10 @@ public class GameHandler : MonoBehaviour {
 
 							break;
 
+						case CueBall.HitState.Hit:
+							gameState = GameState.Player2Turn;
+							break;
+
 						case CueBall.HitState.Miss:
 							gameState = GameState.Player2Turn;
 							break;
@@ -115,8 +118,9 @@ public class GameHandler : MonoBehaviour {
 						default:
 							break;
 					}
+					cueBall.GetComponent<CueBall>().hitCue = false;
 				}
-				cueBall.GetComponent<CueBall>().hitCue = false;
+				
 				break;
 
 			case GameState.Player2Turn:
@@ -148,7 +152,7 @@ public class GameHandler : MonoBehaviour {
 				{
 					switch ((cueBall.GetComponent<CueBall>().hitState))
 					{
-						case CueBall.HitState.Hit:
+						case CueBall.HitState.HitPocketed:
 
 							bool allPocketed = true;
 							Ball[] all9balls = ballGroup.GetComponentsInChildren<Ball>();
@@ -171,6 +175,10 @@ public class GameHandler : MonoBehaviour {
 							}
 							break;
 
+						case CueBall.HitState.Hit:
+							gameState = GameState.Player1Turn;
+							break;
+
 						case CueBall.HitState.Miss:
 							gameState = GameState.Player1Turn;
 							break;
@@ -183,10 +191,9 @@ public class GameHandler : MonoBehaviour {
 						default:
 							break;
 					}
+					cueBall.GetComponent<CueBall>().hitCue = false;
 
 				}
-
-				cueBall.GetComponent<CueBall>().hitCue = false;
 				break;
 		}
 
@@ -210,7 +217,7 @@ public class GameHandler : MonoBehaviour {
 	{
 		bool result = true;
 
-		if (cueBall.GetComponent<Rigidbody>().velocity.magnitude > 0.05 && cueBall.GetComponent<MeshRenderer>().enabled == true)
+		if (cueBall.GetComponent<Rigidbody>().velocity.magnitude > 0.1 && cueBall.GetComponent<MeshRenderer>().enabled == true)
 		{
 			result = false;
 		}
@@ -222,7 +229,7 @@ public class GameHandler : MonoBehaviour {
 		for (int i = 0; i < ballGroup.transform.childCount; i++)
 		{
 			//print(i + ", " + ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude);
-			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.05)
+			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.1 && ballGroup.transform.GetChild(i).gameObject.active == true)
 			{
 				result = false;
 			}
