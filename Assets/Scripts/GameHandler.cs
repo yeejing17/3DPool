@@ -83,15 +83,19 @@ public class GameHandler : MonoBehaviour {
 				{
 					switch ((cueBall.GetComponent<CueBall>().hitState))
 					{
-						case CueBall.HitState.HitPocketed:
+				case CueBall.HitState.HitPocketed:
 							
-							bool allPocketed = true;
-							Ball[] all9balls = ballGroup.GetComponentsInChildren<Ball>();
-							foreach (Ball ball in all9balls) {
-								allPocketed = allPocketed & ball.GetComponent<Ball> ().isPocketed; //if all balls are pocketed: allPocketed = 1*1*1*1.... = 1
+							//adding
+							Ball[] nine_Ball = ballGroup.GetComponentsInChildren<Ball> ();
+							bool nineBallPocketed = nine_Ball [8].GetComponent<Ball> ().isPocketed;
+							bool cueNotPocketed = true;
+							if (cueBall.GetComponent<CueBall> ().hitState == CueBall.HitState.Foul) {
+								cueNotPocketed = false;
 							}
+							//end adding
+							print("hello???");
 
-							if (allPocketed) /* Set if player1 win game*/
+							if (nineBallPocketed & cueNotPocketed) /* Set if player1 win game*/
 							{
 								// Announce win condition during GameState.Pending1Turn && CueBall.HitState.Hit
 								print("player 1 wins!");
