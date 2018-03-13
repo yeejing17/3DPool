@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameHandler : MonoBehaviour {
 
@@ -8,6 +9,8 @@ public class GameHandler : MonoBehaviour {
 
 	public CueBall cueBall;		// might switch type to CueBall
 	public GameObject ballGroup;
+    public Text stateText;
+    public Text resultText;
 
 	GameState gameState;
 	public bool allBallsStopMoving;	// change to private
@@ -19,6 +22,9 @@ public class GameHandler : MonoBehaviour {
 
 		gameState = GameState.AwaitingStart;
 		allBallsStopMoving = true;
+
+        stateText.text = "Waiting game to start...";
+        resultText.text = "";
 	}
 
 	// Update is called once per frame
@@ -33,23 +39,24 @@ public class GameHandler : MonoBehaviour {
 			case GameState.AwaitingStart:
 
 				cueBall.GetComponent<CueBall> ().hitState = CueBall.HitState.Idle;
+                
+                // disable all ball interactions with cue during GameState.AwaitingStart
+                //done	
 
-				// disable all ball interactions with cue during GameState.AwaitingStart
-				//done	
+                //cueStick.GetComponent<CueStick> ().m_disableCollider ();
 
-				//cueStick.GetComponent<CueStick> ().m_disableCollider ();
-
-				if (true /*confirm start game*/)
+                if (true /*confirm start game*/)
 				{
 					gameState = GameState.Player1Turn;
-				}
+                    stateText.text = "Player 1's turn";
+                }
 				break;
 
 			case GameState.Player1Turn:
 
 				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
-
-				if (cueBall.GetComponent<MeshRenderer>().enabled == false)	// cue ball is pocketed by previous player
+                
+                if (cueBall.GetComponent<MeshRenderer>().enabled == false)	// cue ball is pocketed by previous player
 				{
 					cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
 					cueBall.GetComponent<MeshRenderer>().enabled = true;
@@ -88,7 +95,9 @@ public class GameHandler : MonoBehaviour {
 							{
 								// Announce win condition during GameState.Pending1Turn && CueBall.HitState.Hit
 								print("player 1 wins!");
-								ResetGame();
+                                stateText.text = "Game ended";
+                                UpdateResult("Player 1 wins!");
+                                ResetGame();
 								gameState = GameState.AwaitingStart;
 							
 							
@@ -96,24 +105,28 @@ public class GameHandler : MonoBehaviour {
 							else
 							{
 								gameState = GameState.Player1Turn;
-										
-							}
+                            }
 
 							break;
 
 						case CueBall.HitState.Hit:
-							gameState = GameState.Player2Turn;
-							break;
+							gameState = GameState.Player1Turn;
+                            stateText.text = "Player 1's turn";
+                            UpdateResult("Player 1 continues");
+                            break;
 
 						case CueBall.HitState.Miss:
 							gameState = GameState.Player2Turn;
-							break;
+                            stateText.text = "Player 2's turn";
+                            UpdateResult("Player 1 did not hit any ball\nPlayer 2's turn");
+                            break;
 
 						case CueBall.HitState.Foul:
 							gameState = GameState.Player2Turn;
-							
-							// Set condition where player 2 can place cueBall during GameState.Pending1Turn && CueBall.HitState.Foul
-							break;
+                            stateText.text = "Player 2's turn";
+                            UpdateResult("Player 1 fouled\nPlayer 2 can put cue ball anywhere");
+                            // Set condition where player 2 can place cueBall during GameState.Pending1Turn && CueBall.HitState.Foul
+                            break;
 
 						default:
 							break;
@@ -165,28 +178,37 @@ public class GameHandler : MonoBehaviour {
 								// Announce win condition during GameState.Pending2Turn && CueBall.HitState.Hit
 								//done
 								print("player 2 wins!");
-								ResetGame();
+                                stateText.text = "Game ended";
+                                UpdateResult("Player 2 wins!");
+                                ResetGame();
 								gameState = GameState.AwaitingStart;
 							}
 							else
 							{
+
 								gameState = GameState.Player2Turn;
 
 							}
 							break;
 
 						case CueBall.HitState.Hit:
-							gameState = GameState.Player1Turn;
-							break;
+							gameState = GameState.Player2Turn;
+                            stateText.text = "Player 2's turn";
+                            UpdateResult("Player 2 continues");
+                            break;
 
 						case CueBall.HitState.Miss:
 							gameState = GameState.Player1Turn;
-							break;
+                            stateText.text = "Player 1's turn";
+                            UpdateResult("Player 2 did not hit any ball\nPlayer 1's turn");
+                            break;
 
 						case CueBall.HitState.Foul:
 							gameState = GameState.Player1Turn;
-							// Set condition where player 1 can place cueBall during GameState.Pending2Turn && CueBall.HitState.Foul
-							break;
+                            stateText.text = "Player 1's turn";
+                            UpdateResult("Player 2 fouled\nPlayer 1 can put cue ball anywhere");
+                            // Set condition where player 1 can place cueBall during GameState.Pending2Turn && CueBall.HitState.Foul
+                            break;
 
 						default:
 							break;
@@ -240,4 +262,11 @@ public class GameHandler : MonoBehaviour {
 		}
 		return result;
 	}
+
+    IEnumerator UpdateResult(string text)
+    {
+        resultText.text = text;
+        yield return new WaitForSeconds(3);
+        resultText.text = "";
+    }
 }
