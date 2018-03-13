@@ -22,9 +22,10 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // TODO: set condition changes when ball is pocketed or not when trigger with hole collider
-        if (isPocketed)
-            this.gameObject.SetActive(false);
+		// TODO: set condition changes when ball is pocketed or not when trigger with hole collider
+		if (isPocketed)
+			//this.gameObject.SetActive(false);
+			this.GetComponent<MeshRenderer>().enabled = false;
 
 		velocity = this.GetComponent<Rigidbody>().velocity.magnitude;
     }
@@ -40,9 +41,11 @@ public class Ball : MonoBehaviour
             
     }
 
-	public void returnStartingPosition()
+	public void ReturnStartingPosition()
 	{
 		transform.position = startingPosition;
+		this.GetComponent<MeshRenderer>().enabled = true;
+		isPocketed = false;
 	}
 		
 }

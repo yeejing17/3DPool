@@ -20,10 +20,14 @@ public class CueBall : MonoBehaviour
 
 	Collider m_Collider;
 
-	private float cueStickVelocity;
+	public float cueStickVelocity;
 	private Vector3 cueStickLastPosition;
 
 	public float velocity;
+
+	public Vector3 upVector2D;
+
+	bool isPocketed;
 
 	// Use this for initialization
 	void Start()
@@ -33,6 +37,7 @@ public class CueBall : MonoBehaviour
         firstBallHit = 1;
 		m_Collider = GetComponent<Collider>();
 		hitCue = false;
+		isPocketed = false;
 
 		startingPosition = this.transform.position;
 
@@ -100,6 +105,7 @@ public class CueBall : MonoBehaviour
 			hitState = HitState.Foul;
 			//this.gameObject.SetActive(false);
 			this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+			isPocketed = true;
 		}
 
 		if(col.gameObject == cueStick && hitCue == false)
@@ -107,11 +113,11 @@ public class CueBall : MonoBehaviour
 			hitCue = true;
 
 			Vector3 upVector = col.transform.up;
-			Vector3 upVector2D = new Vector3(upVector.x, 0, upVector.z);
+			upVector2D = new Vector3(upVector.x, 0, upVector.z);
 
-			cueStickVelocity = (this.transform.position - cueStickLastPosition).magnitude;
+			cueStickVelocity = (cueStick.transform.position - cueStickLastPosition).magnitude;
 
-			this.GetComponent<Rigidbody>().velocity = (upVector2D * cueStickVelocity);
+			this.GetComponent<Rigidbody>().velocity = (upVector2D * cueStickVelocity * 100);
 
 		}
 	}
@@ -140,5 +146,7 @@ public class CueBall : MonoBehaviour
 	public void returnStartingPosition()
 	{
 		transform.position = startingPosition;
+		this.GetComponent<MeshRenderer>().enabled = true;
+		isPocketed = false;
 	}
 }

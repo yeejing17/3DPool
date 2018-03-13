@@ -81,19 +81,19 @@ public class GameHandler : MonoBehaviour {
 
 				if (allBallsStopMoving)
 				{
+					//adding
+					Ball[] nine_Ball = ballGroup.GetComponentsInChildren<Ball>();
+					bool nineBallPocketed = nine_Ball[8].GetComponent<Ball>().isPocketed;   // TODO: change to another player holding the ball
+					bool cueNotPocketed = true;
+					if (cueBall.GetComponent<CueBall>().hitState == CueBall.HitState.Foul)
+					{
+						cueNotPocketed = false;
+					}
+					//end adding
+
 					switch ((cueBall.GetComponent<CueBall>().hitState))
 					{
-				case CueBall.HitState.HitPocketed:
-							
-							//adding
-							Ball[] nine_Ball = ballGroup.GetComponentsInChildren<Ball> ();
-							bool nineBallPocketed = nine_Ball [8].GetComponent<Ball> ().isPocketed;
-							bool cueNotPocketed = true;
-							if (cueBall.GetComponent<CueBall> ().hitState == CueBall.HitState.Foul) {
-								cueNotPocketed = false;
-							}
-							//end adding
-
+					case CueBall.HitState.HitPocketed:							
 							if (nineBallPocketed & cueNotPocketed) /* Set if player1 win game*/
 							{
 								// Announce win condition during GameState.Pending1Turn && CueBall.HitState.Hit
@@ -101,9 +101,7 @@ public class GameHandler : MonoBehaviour {
                                 stateText.text = "Game ended";
                                 UpdateResult("Player 1 wins!");
                                 ResetGame();
-								gameState = GameState.AwaitingStart;
-							
-							
+								gameState = GameState.AwaitingStart;												
 							}
 							else
 							{
@@ -126,6 +124,12 @@ public class GameHandler : MonoBehaviour {
 
 						case CueBall.HitState.Foul:
 							gameState = GameState.Player2Turn;
+
+							if (nineBallPocketed)
+							{
+								nine_Ball[8].ReturnStartingPosition();
+							}
+
                             stateText.text = "Player 2's turn";
                             UpdateResult("Player 1 fouled\nPlayer 2 can put cue ball anywhere");
                             // Set condition where player 2 can place cueBall during GameState.Pending1Turn && CueBall.HitState.Foul
@@ -166,19 +170,20 @@ public class GameHandler : MonoBehaviour {
 
 				if (allBallsStopMoving)
 				{
+					//adding
+					Ball[] nine_Ball = ballGroup.GetComponentsInChildren<Ball>();
+					bool nineBallPocketed = nine_Ball[8].GetComponent<Ball>().isPocketed;
+					bool cueNotPocketed = true;
+					if (cueBall.GetComponent<CueBall>().hitState == CueBall.HitState.Foul)
+					{
+						cueNotPocketed = false;
+					}
+					//end adding
+
 					switch ((cueBall.GetComponent<CueBall>().hitState))
 					{
+
 						case CueBall.HitState.HitPocketed:
-
-							//adding
-							Ball[] nine_Ball = ballGroup.GetComponentsInChildren<Ball> ();
-							bool nineBallPocketed = nine_Ball [8].GetComponent<Ball> ().isPocketed;
-							bool cueNotPocketed = true;
-							if (cueBall.GetComponent<CueBall> ().hitState == CueBall.HitState.Foul) {
-								cueNotPocketed = false;
-							}
-							//end adding
-
 							if (nineBallPocketed & cueNotPocketed) /*Set if player2 win game*/
 							{
 								// Announce win condition during GameState.Pending2Turn && CueBall.HitState.Hit
@@ -191,7 +196,10 @@ public class GameHandler : MonoBehaviour {
 							}
 							else
 							{
-
+								if (nineBallPocketed)
+								{
+									nine_Ball[8].ReturnStartingPosition();
+								}
 								gameState = GameState.Player2Turn;
 
 							}
@@ -211,7 +219,13 @@ public class GameHandler : MonoBehaviour {
 
 						case CueBall.HitState.Foul:
 							gameState = GameState.Player1Turn;
-                            stateText.text = "Player 1's turn";
+
+							if (nineBallPocketed)
+							{
+								nine_Ball[8].ReturnStartingPosition();
+							}
+
+							stateText.text = "Player 1's turn";
                             UpdateResult("Player 2 fouled\nPlayer 1 can put cue ball anywhere");
                             // Set condition where player 1 can place cueBall during GameState.Pending2Turn && CueBall.HitState.Foul
                             break;
@@ -235,7 +249,7 @@ public class GameHandler : MonoBehaviour {
 		// reset game and ball positions after win condition
 		Ball[] all9balls = ballGroup.GetComponentsInChildren<Ball>();
 		foreach (Ball ball in all9balls){
-			ball.GetComponent<Ball> ().returnStartingPosition();
+			ball.GetComponent<Ball> ().ReturnStartingPosition();
 		}
 		cueBall.GetComponent<CueBall> ().returnStartingPosition();
 		gameState = GameState.AwaitingStart;
@@ -257,7 +271,7 @@ public class GameHandler : MonoBehaviour {
 		for (int i = 0; i < ballGroup.transform.childCount; i++)
 		{
 			//print(i + ", " + ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude);
-			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.1 && ballGroup.transform.GetChild(i).gameObject.active == true)
+			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.1 && ballGroup.transform.GetChild(i).GetComponent<MeshRenderer>().enabled == true)
 			{
 				result = false;
 			}
