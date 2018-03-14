@@ -117,7 +117,7 @@ public class CueBall : MonoBehaviour
 
 			cueStickVelocity = (cueStick.transform.position - cueStickLastPosition).magnitude;
 
-			this.GetComponent<Rigidbody>().velocity = (upVector2D * cueStickVelocity * 100);
+			this.GetComponent<Rigidbody>().velocity = (upVector2D * cueStickVelocity * 300);
 
 		}
 	}

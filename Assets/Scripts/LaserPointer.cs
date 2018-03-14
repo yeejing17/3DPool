@@ -64,7 +64,7 @@ public class LaserPointer : MonoBehaviour
 	void Update()
 	{
 		// Is the touchpad held down?
-		if (Controller.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
+		if (Controller.GetPress(SteamVR_Controller.ButtonMask.Trigger))
 		{
 			RaycastHit hit;
 
@@ -89,7 +89,7 @@ public class LaserPointer : MonoBehaviour
 		}
 
 		// Touchpad released this frame & valid teleport position found
-		if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad) && shouldTeleport)
+		if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && shouldTeleport)
 		{
 			Teleport();
 		}

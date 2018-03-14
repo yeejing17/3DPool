@@ -87,11 +87,9 @@ public class ControllerGrabObject : MonoBehaviour
     {
         if (Controller.GetHairTriggerDown())
         {
-            if (collidingObject)
-            {
                 GrabObject();
                 StartCoroutine(RepeatHpatics());
-            }
+            
         }
 
         if (Controller.GetHairTriggerUp())

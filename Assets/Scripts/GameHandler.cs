@@ -99,13 +99,15 @@ public class GameHandler : MonoBehaviour {
 								// Announce win condition during GameState.Pending1Turn && CueBall.HitState.Hit
 								print("player 1 wins!");
                                 stateText.text = "Game ended";
-                                UpdateResult("Player 1 wins!");
+                                resultText.text = "Player 1 wins!";
                                 ResetGame();
 								gameState = GameState.AwaitingStart;												
 							}
 							else
 							{
 								gameState = GameState.Player1Turn;
+                                stateText.text = "Player 1's turn";
+                                resultText.text = "Player 1 continues";
                             }
 
 							break;
@@ -113,13 +115,13 @@ public class GameHandler : MonoBehaviour {
 						case CueBall.HitState.Hit:
 							gameState = GameState.Player1Turn;
                             stateText.text = "Player 1's turn";
-                            UpdateResult("Player 1 continues");
+                            resultText.text = "Player 1 continues";
                             break;
 
 						case CueBall.HitState.Miss:
 							gameState = GameState.Player2Turn;
                             stateText.text = "Player 2's turn";
-                            UpdateResult("Player 1 did not hit any ball\nPlayer 2's turn");
+                            resultText.text = "Player 1 did not hit any ball\nPlayer 2's turn";
                             break;
 
 						case CueBall.HitState.Foul:
@@ -131,7 +133,7 @@ public class GameHandler : MonoBehaviour {
 							}
 
                             stateText.text = "Player 2's turn";
-                            UpdateResult("Player 1 fouled\nPlayer 2 can put cue ball anywhere");
+                            resultText.text = "Player 1 fouled\nPlayer 2 can put cue ball anywhere";
                             // Set condition where player 2 can place cueBall during GameState.Pending1Turn && CueBall.HitState.Foul
                             break;
 
@@ -190,7 +192,7 @@ public class GameHandler : MonoBehaviour {
 								//done
 								print("player 2 wins!");
                                 stateText.text = "Game ended";
-                                UpdateResult("Player 2 wins!");
+                                resultText.text = "Player 2 wins!";
                                 ResetGame();
 								gameState = GameState.AwaitingStart;
 							}
@@ -201,8 +203,10 @@ public class GameHandler : MonoBehaviour {
 									nine_Ball[8].ReturnStartingPosition();
 								}
 								gameState = GameState.Player2Turn;
+                                stateText.text = "Player 2's turn";
+                                UpdateResult("Player 2 continues");
 
-							}
+                            }
 							break;
 
 						case CueBall.HitState.Hit:
@@ -259,7 +263,7 @@ public class GameHandler : MonoBehaviour {
 	{
 		bool result = true;
 
-		if (cueBall.GetComponent<Rigidbody>().velocity.magnitude > 0.1 && cueBall.GetComponent<MeshRenderer>().enabled == true)
+		if (cueBall.GetComponent<Rigidbody>().velocity.magnitude > 0.7 && cueBall.GetComponent<MeshRenderer>().enabled == true)
 		{
 			result = false;
 		}
@@ -271,7 +275,7 @@ public class GameHandler : MonoBehaviour {
 		for (int i = 0; i < ballGroup.transform.childCount; i++)
 		{
 			//print(i + ", " + ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude);
-			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.1 && ballGroup.transform.GetChild(i).GetComponent<MeshRenderer>().enabled == true)
+			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.7 && ballGroup.transform.GetChild(i).GetComponent<MeshRenderer>().enabled == true)
 			{
 				result = false;
 			}
