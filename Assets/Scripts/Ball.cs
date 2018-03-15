@@ -11,6 +11,7 @@ public class Ball : MonoBehaviour
     public bool isPocketed;
 
 	public float velocity;
+	public float angularVelocity;
 
     // Use this for initialization
     void Start()
@@ -28,6 +29,7 @@ public class Ball : MonoBehaviour
 			this.GetComponent<MeshRenderer>().enabled = false;
 
 		velocity = this.GetComponent<Rigidbody>().velocity.magnitude;
+		angularVelocity = this.GetComponent<Rigidbody>().angularVelocity.magnitude;
     }
 
     void OnTriggerEnter(Collider col)

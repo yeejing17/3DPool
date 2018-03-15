@@ -14,6 +14,7 @@ public class ControllerInput : MonoBehaviour {
     public GameObject otherController;
 
     public GameObject cueStick;
+	public GameObject cueBall;
 
     public Quaternion cueStickRotation;
 
@@ -41,6 +42,15 @@ public class ControllerInput : MonoBehaviour {
             {
                 cueStick.transform.localRotation = cueStickRotation;
             }
+
+			if (Controller.GetHairTriggerDown() && 
+				cueBall.transform.parent == this.transform)
+				// TODO: set another condition where below is the surface collider
+			{
+				cueBall.transform.parent = cueBall.GetComponent<CueBall>().originalParent.transform;
+				cueBall.GetComponent<Rigidbody>().useGravity = true;
+				cueBall.GetComponent<Rigidbody>().isKinematic = false;				
+			}
         }
 		
 	}

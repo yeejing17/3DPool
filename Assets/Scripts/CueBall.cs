@@ -24,10 +24,15 @@ public class CueBall : MonoBehaviour
 	private Vector3 cueStickLastPosition;
 
 	public float velocity;
+	public float angularVelocity;
 
 	public Vector3 upVector2D;
 
 	bool isPocketed;
+
+	public GameObject originalParent;
+	public GameObject controllerParent;
+	public Collider roofCollider;
 
 	// Use this for initialization
 	void Start()
@@ -38,6 +43,8 @@ public class CueBall : MonoBehaviour
 		m_Collider = GetComponent<Collider>();
 		hitCue = false;
 		isPocketed = false;
+
+		originalParent = this.transform.parent.gameObject;
 
 		startingPosition = this.transform.position;
 
@@ -50,6 +57,7 @@ public class CueBall : MonoBehaviour
 		//print("HitCue: " + hitCue);
 		print(hitState);
 		velocity = this.GetComponent<Rigidbody>().velocity.magnitude;
+		angularVelocity = this.GetComponent<Rigidbody>().angularVelocity.magnitude;
 
 		var ballsOnTable = GameObject.FindGameObjectsWithTag("NumberBall");
 		firstBallHit = 15;
@@ -108,7 +116,7 @@ public class CueBall : MonoBehaviour
 			isPocketed = true;
 		}
 
-		if(col.gameObject == cueStick && hitCue == false)
+		if(col.gameObject == cueStick && hitCue == false && this.transform.parent == originalParent.transform)
 		{
 			hitCue = true;
 
@@ -142,6 +150,11 @@ public class CueBall : MonoBehaviour
                 else
                     hitState = HitState.Foul;
         }
+
+		if (collision.gameObject.name == "Surface Collider")
+		{
+			this.GetComponent<CueBall>().roofCollider.GetComponent<Collider>().isTrigger = false;
+		}
     }
 	public void returnStartingPosition()
 	{

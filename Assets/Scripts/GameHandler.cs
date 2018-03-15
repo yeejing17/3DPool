@@ -57,9 +57,14 @@ public class GameHandler : MonoBehaviour {
 				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
                 
                 if (cueBall.GetComponent<MeshRenderer>().enabled == false)	// cue ball is pocketed by previous player
-				{
-					cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
+				{					
 					cueBall.GetComponent<MeshRenderer>().enabled = true;
+					//cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
+					cueBall.transform.parent = cueBall.GetComponent<CueBall>().controllerParent.transform;
+					cueBall.transform.localPosition = new Vector3(0, 0, 0);
+					cueBall.GetComponent<Rigidbody>().isKinematic = true;
+					cueBall.GetComponent<Rigidbody>().useGravity = false;
+					cueBall.GetComponent<CueBall>().roofCollider.GetComponent<Collider>().isTrigger = true;
 				}
 
 				// enable collision between cue and cueBall during GameState.Player1Turn
@@ -263,25 +268,31 @@ public class GameHandler : MonoBehaviour {
 	{
 		bool result = true;
 
-		if (cueBall.GetComponent<Rigidbody>().velocity.magnitude > 0.7 && cueBall.GetComponent<MeshRenderer>().enabled == true)
+		if (cueBall.GetComponent<Rigidbody>().velocity.magnitude > 0.7 && 
+			cueBall.GetComponent<Rigidbody>().angularVelocity.magnitude > 0.7 &&
+			cueBall.GetComponent<MeshRenderer>().enabled == true)
 		{
 			result = false;
 		}
 		else
 		{
 			cueBall.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+			cueBall.GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);
 		}
 
 		for (int i = 0; i < ballGroup.transform.childCount; i++)
 		{
 			//print(i + ", " + ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude);
-			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.7 && ballGroup.transform.GetChild(i).GetComponent<MeshRenderer>().enabled == true)
+			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.7 && 
+				ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().angularVelocity.magnitude > 0.7 &&
+				ballGroup.transform.GetChild(i).GetComponent<MeshRenderer>().enabled == true)
 			{
 				result = false;
 			}
 			else
 			{
 				ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+				ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);
 			}
 		}
 		return result;
