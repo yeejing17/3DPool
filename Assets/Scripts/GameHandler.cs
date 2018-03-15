@@ -60,6 +60,7 @@ public class GameHandler : MonoBehaviour {
 				{
 					cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
 					cueBall.GetComponent<MeshRenderer>().enabled = true;
+                    cueBall.GetComponent<Collider>().enabled = true;
 				}
 
 				// enable collision between cue and cueBall during GameState.Player1Turn
@@ -153,12 +154,13 @@ public class GameHandler : MonoBehaviour {
 				{
 					cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
 					cueBall.GetComponent<MeshRenderer>().enabled = true;
-				}
+                    cueBall.GetComponent<Collider>().enabled = true;
+                }
 
-				//enable collision between cue and cueBall during GameState.Player2Turn
-				//done
-				//cueStick.GetComponent<CueStick> ().m_enableCollider ();
-				if (cueBall.GetComponent<CueBall>().hitCue == true) //done TODO: check cue hits cue ball
+                //enable collision between cue and cueBall during GameState.Player2Turn
+                //done
+                //cueStick.GetComponent<CueStick> ().m_enableCollider ();
+                if (cueBall.GetComponent<CueBall>().hitCue == true) //done TODO: check cue hits cue ball
 				{
 					gameState = GameState.Pending2Turn;
 					cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
@@ -254,6 +256,8 @@ public class GameHandler : MonoBehaviour {
 		Ball[] all9balls = ballGroup.GetComponentsInChildren<Ball>();
 		foreach (Ball ball in all9balls){
 			ball.GetComponent<Ball> ().ReturnStartingPosition();
+            ball.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+            ball.GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);
 		}
 		cueBall.GetComponent<CueBall> ().returnStartingPosition();
 		gameState = GameState.AwaitingStart;
@@ -267,10 +271,10 @@ public class GameHandler : MonoBehaviour {
 		{
 			result = false;
 		}
-		else
-		{
-			cueBall.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-		}
+		//else
+		//{
+		//	cueBall.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+		//}
 
 		for (int i = 0; i < ballGroup.transform.childCount; i++)
 		{
@@ -279,10 +283,10 @@ public class GameHandler : MonoBehaviour {
 			{
 				result = false;
 			}
-			else
-			{
-				ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-			}
+			//else
+			//{
+			//	ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+			//}
 		}
 		return result;
 	}

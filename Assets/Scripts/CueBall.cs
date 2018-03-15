@@ -9,6 +9,8 @@ public class CueBall : MonoBehaviour
 
     public GameObject ballGroup;
 	public GameObject cueStick;
+    public GameObject cueController;
+    public GameObject ballRange;
 
     public Vector3 startingPosition;
 
@@ -105,10 +107,13 @@ public class CueBall : MonoBehaviour
 			hitState = HitState.Foul;
 			//this.gameObject.SetActive(false);
 			this.gameObject.GetComponent<MeshRenderer>().enabled = false;
-			isPocketed = true;
+            this.GetComponent<Collider>().enabled = false;
+
+            isPocketed = true;
 		}
 
-		if(col.gameObject == cueStick && hitCue == false)
+		if(col.gameObject == cueStick && hitCue == false &&
+           cueController.GetComponent<ControllerInput>().canHitCueBall == true)
 		{
 			hitCue = true;
 
@@ -143,10 +148,27 @@ public class CueBall : MonoBehaviour
                     hitState = HitState.Foul;
         }
     }
-	public void returnStartingPosition()
+
+    private void OnTriggerExit(Collider col)
+    {
+        if (col.gameObject == ballRange)
+        {
+            hitState = HitState.Foul;
+            //this.gameObject.SetActive(false);
+            this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+            this.GetComponent<Collider>().enabled = false;
+
+            isPocketed = true;
+        }
+    }
+    public void returnStartingPosition()
 	{
 		transform.position = startingPosition;
 		this.GetComponent<MeshRenderer>().enabled = true;
-		isPocketed = false;
+        this.GetComponent<Collider>().enabled = true;
+        this.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+        this.GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);
+
+        isPocketed = false;
 	}
 }

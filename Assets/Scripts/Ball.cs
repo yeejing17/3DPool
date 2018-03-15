@@ -24,10 +24,15 @@ public class Ball : MonoBehaviour
     {
 		// TODO: set condition changes when ball is pocketed or not when trigger with hole collider
 		if (isPocketed)
+        {
+            this.GetComponent<MeshRenderer>().enabled = false;
+            this.GetComponent<Collider>().enabled = false;
+        }
 			//this.gameObject.SetActive(false);
-			this.GetComponent<MeshRenderer>().enabled = false;
+			
 
-		velocity = this.GetComponent<Rigidbody>().velocity.magnitude;
+
+        velocity = this.GetComponent<Rigidbody>().velocity.magnitude;
     }
 
     void OnTriggerEnter(Collider col)
@@ -45,7 +50,8 @@ public class Ball : MonoBehaviour
 	{
 		transform.position = startingPosition;
 		this.GetComponent<MeshRenderer>().enabled = true;
-		isPocketed = false;
+        this.GetComponent<Collider>().enabled = true;
+        isPocketed = false;
 	}
 		
 }

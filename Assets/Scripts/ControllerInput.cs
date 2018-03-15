@@ -17,6 +17,8 @@ public class ControllerInput : MonoBehaviour {
 
     public Quaternion cueStickRotation;
 
+    public bool canHitCueBall;
+
     void Awake()
     {
         trackedObj = GetComponent<SteamVR_TrackedObject>();
@@ -25,6 +27,7 @@ public class ControllerInput : MonoBehaviour {
     private void Start()
     {
         cueStickRotation = cueStick.transform.localRotation;
+        canHitCueBall = false;
     }
 
     // Update is called once per frame
@@ -40,6 +43,18 @@ public class ControllerInput : MonoBehaviour {
             else
             {
                 cueStick.transform.localRotation = cueStickRotation;
+            }
+        }
+
+        if (this.gameObject.name == "Controller (right)")
+        {
+            if (Controller.GetHairTrigger())
+            {
+                canHitCueBall = true;
+            }
+            else
+            {
+                canHitCueBall = false;
             }
         }
 		
