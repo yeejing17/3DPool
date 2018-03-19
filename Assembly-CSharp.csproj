@@ -54,6 +54,7 @@
      <Compile Include="Assets\Imported\Clock\Scripts\Clock.cs" />
      <Compile Include="Assets\Scripts\Ball.cs" />
      <Compile Include="Assets\Scripts\ControllerGrabObject.cs" />
+     <Compile Include="Assets\Scripts\ControllerInput.cs" />
      <Compile Include="Assets\Scripts\CueBall.cs" />
      <Compile Include="Assets\Scripts\CueStick.cs" />
      <Compile Include="Assets\Scripts\GameHandler.cs" />
