@@ -31,6 +31,9 @@ public class CueBall : MonoBehaviour
 
 	bool isPocketed;
 
+    public Transform originalParent;
+    public Transform controllerParent;
+
 	// Use this for initialization
 	void Start()
     {
@@ -40,6 +43,7 @@ public class CueBall : MonoBehaviour
 		m_Collider = GetComponent<Collider>();
 		hitCue = false;
 		isPocketed = false;
+        originalParent = this.transform.parent;
 
 		startingPosition = this.transform.position;
 
@@ -50,7 +54,7 @@ public class CueBall : MonoBehaviour
     void Update()
     {
 		//print("HitCue: " + hitCue);
-		print(hitState);
+		//print(hitState);
 		velocity = this.GetComponent<Rigidbody>().velocity.magnitude;
 
 		var ballsOnTable = GameObject.FindGameObjectsWithTag("NumberBall");

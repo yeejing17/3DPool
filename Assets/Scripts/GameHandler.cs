@@ -15,6 +15,9 @@ public class GameHandler : MonoBehaviour {
 	GameState gameState;
 	public bool allBallsStopMoving;	// change to private
 
+    public Collider roofCollider;
+    public Collider ballRangeCollider;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -30,7 +33,7 @@ public class GameHandler : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		print(gameState);
+		//print(gameState);
 		allBallsStopMoving = CheckAllBallsNotMoving();
 
 		// gameState changes
@@ -54,14 +57,20 @@ public class GameHandler : MonoBehaviour {
 
 			case GameState.Player1Turn:
 
+                roofCollider.enabled = false;
 				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
                 
                 if (cueBall.GetComponent<MeshRenderer>().enabled == false)	// cue ball is pocketed by previous player
 				{
-					cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
-					cueBall.GetComponent<MeshRenderer>().enabled = true;
-                    cueBall.GetComponent<Collider>().enabled = true;
-				}
+                    //cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
+                    cueBall.transform.parent = cueBall.GetComponent<CueBall>().controllerParent;
+                    cueBall.transform.localPosition = new Vector3(0, 0, 0);
+                    cueBall.GetComponent<Rigidbody>().isKinematic = true;
+                    cueBall.GetComponent<MeshRenderer>().enabled = true;
+                    cueBall.GetComponent<Collider>().enabled = true ;
+                    cueBall.GetComponent<Collider>().isTrigger = true;
+                    ballRangeCollider.enabled = false;
+                }
 
 				// enable collision between cue and cueBall during GameState.Player1Turn
 				//done
@@ -78,6 +87,7 @@ public class GameHandler : MonoBehaviour {
 
 			case GameState.Pending1Turn:
 
+                roofCollider.enabled = true;
 				// check if all balls stop moving during GameState.Pending1Turn
 
 				if (allBallsStopMoving)
@@ -106,9 +116,13 @@ public class GameHandler : MonoBehaviour {
 							}
 							else
 							{
-								gameState = GameState.Player1Turn;
+                                if (nineBallPocketed)
+                                {
+                                    nine_Ball[8].ReturnStartingPosition();
+                                }
+                                gameState = GameState.Player1Turn;
                                 stateText.text = "Player 1's turn";
-                                resultText.text = "Player 1 continues";
+                                UpdateResult("Player 1 continues");
                             }
 
 							break;
@@ -147,14 +161,20 @@ public class GameHandler : MonoBehaviour {
 				break;
 
 			case GameState.Player2Turn:
-
+                roofCollider.enabled = false;
 				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
 
 				if (cueBall.GetComponent<MeshRenderer>().enabled == false)      // cue ball is pocketed by previous player
 				{
-					cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
+                    //cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
+                    cueBall.transform.parent = cueBall.GetComponent<CueBall>().controllerParent;
+                    cueBall.transform.localPosition = new Vector3(0, 0, 0);
+                    cueBall.GetComponent<Rigidbody>().isKinematic = true;
 					cueBall.GetComponent<MeshRenderer>().enabled = true;
                     cueBall.GetComponent<Collider>().enabled = true;
+                    cueBall.GetComponent<Collider>().isTrigger = true;
+                    ballRangeCollider.enabled = false;
+
                 }
 
                 //enable collision between cue and cueBall during GameState.Player2Turn
@@ -169,7 +189,7 @@ public class GameHandler : MonoBehaviour {
 				break;
 
 			case GameState.Pending2Turn:
-
+                roofCollider.enabled = true;
 				// check if all balls stop moving during GameState.Pending2Turn
 
 				if (allBallsStopMoving)
