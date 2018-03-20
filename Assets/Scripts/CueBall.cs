@@ -12,26 +12,20 @@ public class CueBall : MonoBehaviour
     public GameObject cueController;
     public GameObject ballRange;
 
-    public Vector3 startingPosition;
-
     public HitState hitState;
 
     public int firstBallHit = 1;
 
 	public bool hitCue;
 
-	Collider m_Collider;
-
+	public float velocity;
 	public float cueStickVelocity;
+
+	public Vector3 startingPosition;
+	public Vector3 upVector2D;
 	private Vector3 cueStickLastPosition;
 
-	public float velocity;
-
-	public Vector3 upVector2D;
-
-	bool isPocketed;
-
-    public Transform originalParent;
+	public Transform originalParent;
     public Transform controllerParent;
 
 	// Use this for initialization
@@ -40,23 +34,19 @@ public class CueBall : MonoBehaviour
         // initialize variables
         hitState = HitState.Idle;
         firstBallHit = 1;
-		m_Collider = GetComponent<Collider>();
 		hitCue = false;
-		isPocketed = false;
         originalParent = this.transform.parent;
-
 		startingPosition = this.transform.position;
-
 		cueStickLastPosition = cueStick.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-		//print("HitCue: " + hitCue);
 		print(hitState);
 		velocity = this.GetComponent<Rigidbody>().velocity.magnitude;
 
+		// get the lowest number ball
 		var ballsOnTable = GameObject.FindGameObjectsWithTag("NumberBall");
 		firstBallHit = 15;
 		foreach (var ball in ballsOnTable)
@@ -65,57 +55,20 @@ public class CueBall : MonoBehaviour
 				firstBallHit = ball.GetComponent<Ball>().ballNumber;
 		}
 
-		//  TODO: change hitState based on rules and first ball hit (or not)
-		switch (hitState)
-        {
-            case HitState.Idle:
-                // waiting game start, do nothing
-                break;
-
-            case HitState.Before:
-
-                break;
-
-            case HitState.Miss:
-                // if hit, change status to hit
-				
-                // if touch hole collider, foul
-
-                // if touch any other ball, foul
-                break;
-
-            case HitState.Foul:
-                // do nothing, waiting ball stopped
-                break;
-
-            case HitState.Hit:
-                // if touch hole collider, foul
-                // do nothing, waiting ball stopped
-                break;
-
-			case HitState.HitPocketed:
-
-				break;
-                
-            default:
-                break;
-        }
-
 		cueStickLastPosition = cueStick.transform.position;
 	}
 
 	private void OnTriggerEnter(Collider col)
 	{
+		// if pocketed
 		if(col.gameObject.tag == "HoleCollider")
 		{
 			hitState = HitState.Foul;
-			//this.gameObject.SetActive(false);
 			this.gameObject.GetComponent<MeshRenderer>().enabled = false;
             this.GetComponent<Collider>().enabled = false;
-
-            isPocketed = true;
 		}
 
+		// trigger collision between cue and cue ball
 		if(col.gameObject == cueStick && hitCue == false &&
            cueController.GetComponent<ControllerInput>().canHitCueBall == true)
 		{
@@ -133,13 +86,6 @@ public class CueBall : MonoBehaviour
 
 	void OnCollisionEnter(Collision collision)
     {
-		//// collides with cue
-		//if (collision.gameObject.name == "CueStick")
-		//{
-		//	hitCue = true;
-		//}
-
-
 		// collides with number ball
         if (hitState == HitState.Miss)
         {
@@ -155,24 +101,22 @@ public class CueBall : MonoBehaviour
 
     private void OnTriggerExit(Collider col)
     {
+		// if ball flies out of table
         if (col.gameObject == ballRange)
         {
             hitState = HitState.Foul;
             //this.gameObject.SetActive(false);
             this.gameObject.GetComponent<MeshRenderer>().enabled = false;
             this.GetComponent<Collider>().enabled = false;
-
-            isPocketed = true;
         }
     }
     public void returnStartingPosition()
 	{
+		// reset starting properties when game ends
 		transform.position = startingPosition;
 		this.GetComponent<MeshRenderer>().enabled = true;
         this.GetComponent<Collider>().enabled = true;
         this.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
         this.GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);
-
-        isPocketed = false;
 	}
 }

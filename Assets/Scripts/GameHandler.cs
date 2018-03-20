@@ -6,23 +6,24 @@ using UnityEngine.UI;
 public class GameHandler : MonoBehaviour {
 
 	enum GameState { AwaitingStart, Player1Turn, Player2Turn, Pending1Turn, Pending2Turn };
-
-	public CueBall cueBall;		// might switch type to CueBall
-	public GameObject ballGroup;
-    public Text stateText;
-    public Text resultText;
-
 	GameState gameState;
-	public bool allBallsStopMoving;	// change to private
+
+	public CueBall cueBall;	
+
+	public GameObject ballGroup;
+
+	public bool allBallsStopMoving;
 
     public Collider roofCollider;
     public Collider ballRangeCollider;
+
+	public Text stateText;
+	public Text resultText;
 
 	// Use this for initialization
 	void Start ()
 	{
 		// initialize variables
-
 		gameState = GameState.AwaitingStart;
 		allBallsStopMoving = true;
 
@@ -41,12 +42,7 @@ public class GameHandler : MonoBehaviour {
 		{
 			case GameState.AwaitingStart:
 
-				cueBall.GetComponent<CueBall> ().hitState = CueBall.HitState.Idle;
-                
-                // disable all ball interactions with cue during GameState.AwaitingStart
-                //done	
-
-                //cueStick.GetComponent<CueStick> ().m_disableCollider ();
+				cueBall.GetComponent<CueBall> ().hitState = CueBall.HitState.Idle;               
 
                 if (true /*confirm start game*/)
 				{
@@ -59,10 +55,8 @@ public class GameHandler : MonoBehaviour {
 
                 roofCollider.enabled = false;
 				
-
                 if (cueBall.GetComponent<MeshRenderer>().enabled == false || cueBall.hitState == CueBall.HitState.Miss || cueBall.hitState == CueBall.HitState.Foul)      // cue ball is pocketed by previous player o misses first smallest ball
                 {
-                    //cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
                     cueBall.transform.parent = cueBall.GetComponent<CueBall>().controllerParent;
                     cueBall.transform.localPosition = new Vector3(0, 0, 0);
                     cueBall.GetComponent<Rigidbody>().isKinematic = true;
@@ -74,11 +68,6 @@ public class GameHandler : MonoBehaviour {
 
                 cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
 
-                // enable collision between cue and cueBall during GameState.Player1Turn
-                //done
-                //cueStick.GetComponent<CueStick>().m_enableCollider();	// WTF
-
-                //if (cueStick.GetComponent<CueStick>().hittedCueBall()) //TODO: check if cue hits cue ball: done
                 if (cueBall.GetComponent<CueBall>().hitCue == true)
 				{
 					gameState = GameState.Pending1Turn;
@@ -94,15 +83,13 @@ public class GameHandler : MonoBehaviour {
 
 				if (allBallsStopMoving)
 				{
-					//adding
 					Ball[] nine_Ball = ballGroup.GetComponentsInChildren<Ball>();
-					bool nineBallPocketed = nine_Ball[8].GetComponent<Ball>().isPocketed;   // TODO: change to another player holding the ball
+					bool nineBallPocketed = nine_Ball[8].GetComponent<Ball>().isPocketed;
 					bool cueNotPocketed = true;
 					if (cueBall.GetComponent<CueBall>().hitState == CueBall.HitState.Foul)
 					{
 						cueNotPocketed = false;
 					}
-					//end adding
 
 					switch ((cueBall.GetComponent<CueBall>().hitState))
 					{
@@ -151,7 +138,6 @@ public class GameHandler : MonoBehaviour {
 
                             stateText.text = "Player 2's turn";
                             resultText.text = "Player 1 fouled\nPlayer 2 can put cue ball anywhere";
-                            // Set condition where player 2 can place cueBall during GameState.Pending1Turn && CueBall.HitState.Foul
                             break;
 
 						default:
@@ -168,7 +154,6 @@ public class GameHandler : MonoBehaviour {
 
 				if (cueBall.GetComponent<MeshRenderer>().enabled == false || cueBall.hitState == CueBall.HitState.Miss || cueBall.hitState == CueBall.HitState.Foul)      // cue ball is pocketed by previous player o misses first smallest ball
 				{
-                    //cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
                     cueBall.transform.parent = cueBall.GetComponent<CueBall>().controllerParent;
                     cueBall.transform.localPosition = new Vector3(0, 0, 0);
                     cueBall.GetComponent<Rigidbody>().isKinematic = true;
@@ -181,10 +166,7 @@ public class GameHandler : MonoBehaviour {
 
                 cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
 
-                //enable collision between cue and cueBall during GameState.Player2Turn
-                //done
-                //cueStick.GetComponent<CueStick> ().m_enableCollider ();
-                if (cueBall.GetComponent<CueBall>().hitCue == true) //done TODO: check cue hits cue ball
+                if (cueBall.GetComponent<CueBall>().hitCue == true)
 				{
 					gameState = GameState.Pending2Turn;
 					cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
@@ -194,8 +176,8 @@ public class GameHandler : MonoBehaviour {
 
 			case GameState.Pending2Turn:
                 roofCollider.enabled = true;
-				// check if all balls stop moving during GameState.Pending2Turn
 
+				// check if all balls stop moving during GameState.Pending2Turn
 				if (allBallsStopMoving)
 				{
 					//adding
@@ -215,7 +197,6 @@ public class GameHandler : MonoBehaviour {
 							if (nineBallPocketed & cueNotPocketed) /*Set if player2 win game*/
 							{
 								// Announce win condition during GameState.Pending2Turn && CueBall.HitState.Hit
-								//done
 								print("player 2 wins!");
                                 stateText.text = "Game ended";
                                 resultText.text = "Player 2 wins!";
@@ -257,7 +238,6 @@ public class GameHandler : MonoBehaviour {
 
 							stateText.text = "Player 1's turn";
                             resultText.text = "Player 2 fouled\nPlayer 1 can put cue ball anywhere";
-                            // Set condition where player 1 can place cueBall during GameState.Pending2Turn && CueBall.HitState.Foul
                             break;
 
 						default:
@@ -274,8 +254,6 @@ public class GameHandler : MonoBehaviour {
 
 	void ResetGame()
 	{
-		//define starting position in ball.cs?
-
 		// reset game and ball positions after win condition
 		Ball[] all9balls = ballGroup.GetComponentsInChildren<Ball>();
 		foreach (Ball ball in all9balls){
@@ -295,22 +273,13 @@ public class GameHandler : MonoBehaviour {
 		{
 			result = false;
 		}
-		//else
-		//{
-		//	cueBall.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-		//}
 
 		for (int i = 0; i < ballGroup.transform.childCount; i++)
 		{
-			//print(i + ", " + ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude);
 			if (ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity.magnitude > 0.7 && ballGroup.transform.GetChild(i).GetComponent<MeshRenderer>().enabled == true)
 			{
 				result = false;
 			}
-			//else
-			//{
-			//	ballGroup.transform.GetChild(i).GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-			//}
 		}
 		return result;
 	}

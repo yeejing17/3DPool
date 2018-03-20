@@ -5,7 +5,9 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
 	public GameObject cueBall;
+
     public int ballNumber;
+
     public Vector3 startingPosition;
 
     public bool isPocketed;
@@ -15,6 +17,7 @@ public class Ball : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+		// initialise variables
         isPocketed = false;
 		startingPosition = transform.position;
     }
@@ -22,31 +25,29 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		// TODO: set condition changes when ball is pocketed or not when trigger with hole collider
+		// disappear and disable collider properties if pocketed
 		if (isPocketed)
         {
             this.GetComponent<MeshRenderer>().enabled = false;
             this.GetComponent<Collider>().enabled = false;
         }
-			//this.gameObject.SetActive(false);
-			
-
-
+		
         velocity = this.GetComponent<Rigidbody>().velocity.magnitude;
     }
 
     void OnTriggerEnter(Collider col)
     {
-
+		// if pocketed, set isPocketed to true to be fetched by gameHandler
         if (col.gameObject.tag == "HoleCollider")
 		{
 			isPocketed = true;
-            if (cueBall.GetComponent<CueBall>().hitState != CueBall.HitState.Foul)
+			// exclude case where cue ball hits the first ball which is not the smallest number
+			if (cueBall.GetComponent<CueBall>().hitState != CueBall.HitState.Foul)		
 			    cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.HitPocketed;
-		}
-            
+		}           
     }
 
+	// reset starting properties when game ends
 	public void ReturnStartingPosition()
 	{
 		transform.position = startingPosition;

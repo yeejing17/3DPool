@@ -12,14 +12,12 @@ public class ControllerInput : MonoBehaviour {
     }
 
     public GameObject otherController;
-
     public GameObject cueStick;
+	public GameObject cueBall;
 
-    public Quaternion cueStickRotation;
+	public Quaternion cueStickRotation;
 
     public bool canHitCueBall;
-
-    public GameObject cueBall;
 
     public Collider surfaceCollider;
     public Collider ballRangeCollider;
@@ -40,16 +38,11 @@ public class ControllerInput : MonoBehaviour {
     {
         RaycastHit hit;
         Ray ray = new Ray(cueBall.transform.position, new Vector3(0, -1, 0));
-        
-        // test raycast hit
-        //if (cueBall.transform.parent == this.transform && Physics.Raycast(ray, out hit))
-        //{
-        //    print(hit.collider);
-        //}
 
         if (this.gameObject.name == "Controller (left)")
         {
-            if (Controller.GetHairTrigger())
+			// aim cueBall to left controller
+			if (Controller.GetHairTrigger())
             {
                 cueStick.transform.LookAt(this.transform);
                 cueStick.transform.Rotate(90, 0, 0);
@@ -59,6 +52,7 @@ public class ControllerInput : MonoBehaviour {
                 cueStick.transform.localRotation = cueStickRotation;
             }
 
+			// place cue ball if cue ball is in hand
             if (Controller.GetHairTriggerDown() && cueBall.transform.parent == this.transform)
             {
                 if (Physics.Raycast(ray, out hit))
@@ -77,6 +71,7 @@ public class ControllerInput : MonoBehaviour {
 
         if (this.gameObject.name == "Controller (right)")
         {
+			// toggle collision between cue ball and cue
             if (Controller.GetHairTrigger() && cueBall.transform.parent == cueBall.GetComponent<CueBall>().originalParent )
             {
                 canHitCueBall = true;
@@ -85,7 +80,6 @@ public class ControllerInput : MonoBehaviour {
             {
                 canHitCueBall = false;
             }
-        }
-		
+        }		
 	}
 }
