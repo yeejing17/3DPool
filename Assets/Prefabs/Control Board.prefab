@@ -293,10 +293,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\nHow to Control\n\n - Aim cue to cue ball\n\t - Hold left trigger \n\n
-    - Enable hit cue ball\n\t - Hold right trigger\n\n - Place cue ball\n\t - Press
-    left trigger\n\n - Teleport\n\t - Press right trigger while \n\t   pointing to
-    ground"
+  m_Text: "\nHow to Control\n\n - Aim cue to left controller\n\t - Hold left trigger
+    \n\n - Enable hit cue ball\n\t - Hold right trigger\n\n - Place cue ball (when
+    cue ball in hand)\n\t - Press left trigger\n\n - Teleport\n\t - Press right trigger
+    while \n\t   pointing to ground"
 --- !u!114 &114662630954168334
 MonoBehaviour:
   m_ObjectHideFlags: 1

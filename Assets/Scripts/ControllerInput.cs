@@ -65,7 +65,6 @@ public class ControllerInput : MonoBehaviour {
                 {
                     if (hit.collider == surfaceCollider)
                     {
-                        print(hit.collider);
                         cueBall.transform.parent = cueBall.GetComponent<CueBall>().originalParent;
                         cueBall.GetComponent<Rigidbody>().isKinematic = false;
                         cueBall.GetComponent<Collider>().isTrigger = false;

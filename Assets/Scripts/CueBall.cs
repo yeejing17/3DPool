@@ -54,7 +54,7 @@ public class CueBall : MonoBehaviour
     void Update()
     {
 		//print("HitCue: " + hitCue);
-		//print(hitState);
+		print(hitState);
 		velocity = this.GetComponent<Rigidbody>().velocity.magnitude;
 
 		var ballsOnTable = GameObject.FindGameObjectsWithTag("NumberBall");

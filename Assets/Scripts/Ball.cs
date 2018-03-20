@@ -41,7 +41,8 @@ public class Ball : MonoBehaviour
         if (col.gameObject.tag == "HoleCollider")
 		{
 			isPocketed = true;
-			cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.HitPocketed;
+            if (cueBall.GetComponent<CueBall>().hitState != CueBall.HitState.Foul)
+			    cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.HitPocketed;
 		}
             
     }

@@ -33,7 +33,7 @@ public class GameHandler : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		//print(gameState);
+		print(gameState);
 		allBallsStopMoving = CheckAllBallsNotMoving();
 
 		// gameState changes
@@ -58,10 +58,10 @@ public class GameHandler : MonoBehaviour {
 			case GameState.Player1Turn:
 
                 roofCollider.enabled = false;
-				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
-                
-                if (cueBall.GetComponent<MeshRenderer>().enabled == false)	// cue ball is pocketed by previous player
-				{
+				
+
+                if (cueBall.GetComponent<MeshRenderer>().enabled == false || cueBall.hitState == CueBall.HitState.Miss || cueBall.hitState == CueBall.HitState.Foul)      // cue ball is pocketed by previous player o misses first smallest ball
+                {
                     //cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
                     cueBall.transform.parent = cueBall.GetComponent<CueBall>().controllerParent;
                     cueBall.transform.localPosition = new Vector3(0, 0, 0);
@@ -72,12 +72,14 @@ public class GameHandler : MonoBehaviour {
                     ballRangeCollider.enabled = false;
                 }
 
-				// enable collision between cue and cueBall during GameState.Player1Turn
-				//done
-				//cueStick.GetComponent<CueStick>().m_enableCollider();	// WTF
+                cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
 
-				//if (cueStick.GetComponent<CueStick>().hittedCueBall()) //TODO: check if cue hits cue ball: done
-				if (cueBall.GetComponent<CueBall>().hitCue == true)
+                // enable collision between cue and cueBall during GameState.Player1Turn
+                //done
+                //cueStick.GetComponent<CueStick>().m_enableCollider();	// WTF
+
+                //if (cueStick.GetComponent<CueStick>().hittedCueBall()) //TODO: check if cue hits cue ball: done
+                if (cueBall.GetComponent<CueBall>().hitCue == true)
 				{
 					gameState = GameState.Pending1Turn;
 					cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Miss;
@@ -122,21 +124,21 @@ public class GameHandler : MonoBehaviour {
                                 }
                                 gameState = GameState.Player1Turn;
                                 stateText.text = "Player 1's turn";
-                                UpdateResult("Player 1 continues");
+                                resultText.text = "Player 1 continues";
                             }
 
 							break;
 
 						case CueBall.HitState.Hit:
-							gameState = GameState.Player1Turn;
-                            stateText.text = "Player 1's turn";
-                            resultText.text = "Player 1 continues";
+							gameState = GameState.Player2Turn;
+                            stateText.text = "Player 2's turn";
+                            resultText.text = "Player 1 did not pocket any ball\nPlayer 2's turn";
                             break;
 
 						case CueBall.HitState.Miss:
 							gameState = GameState.Player2Turn;
                             stateText.text = "Player 2's turn";
-                            resultText.text = "Player 1 did not hit any ball\nPlayer 2's turn";
+                            resultText.text = "Player 1 did not hit any ball\nPlayer 2 can put cue ball anywhere";
                             break;
 
 						case CueBall.HitState.Foul:
@@ -162,9 +164,9 @@ public class GameHandler : MonoBehaviour {
 
 			case GameState.Player2Turn:
                 roofCollider.enabled = false;
-				cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
+				
 
-				if (cueBall.GetComponent<MeshRenderer>().enabled == false)      // cue ball is pocketed by previous player
+				if (cueBall.GetComponent<MeshRenderer>().enabled == false || cueBall.hitState == CueBall.HitState.Miss || cueBall.hitState == CueBall.HitState.Foul)      // cue ball is pocketed by previous player o misses first smallest ball
 				{
                     //cueBall.transform.position = cueBall.GetComponent<CueBall>().startingPosition; // TODO: change to another player holding the ball
                     cueBall.transform.parent = cueBall.GetComponent<CueBall>().controllerParent;
@@ -176,6 +178,8 @@ public class GameHandler : MonoBehaviour {
                     ballRangeCollider.enabled = false;
 
                 }
+
+                cueBall.GetComponent<CueBall>().hitState = CueBall.HitState.Before;
 
                 //enable collision between cue and cueBall during GameState.Player2Turn
                 //done
@@ -226,21 +230,21 @@ public class GameHandler : MonoBehaviour {
 								}
 								gameState = GameState.Player2Turn;
                                 stateText.text = "Player 2's turn";
-                                UpdateResult("Player 2 continues");
+                                resultText.text = "Player 2 continues";
 
                             }
 							break;
 
 						case CueBall.HitState.Hit:
-							gameState = GameState.Player2Turn;
-                            stateText.text = "Player 2's turn";
-                            UpdateResult("Player 2 continues");
+							gameState = GameState.Player1Turn;
+                            stateText.text = "Player 1's turn";
+                            resultText.text = "Player 2 did not pocket any ball\nPlayer 1's turn";
                             break;
 
 						case CueBall.HitState.Miss:
 							gameState = GameState.Player1Turn;
                             stateText.text = "Player 1's turn";
-                            UpdateResult("Player 2 did not hit any ball\nPlayer 1's turn");
+                            resultText.text = "Player 2 did not hit any ball\nPlayer 1 can put cue ball anywhere";
                             break;
 
 						case CueBall.HitState.Foul:
@@ -252,7 +256,7 @@ public class GameHandler : MonoBehaviour {
 							}
 
 							stateText.text = "Player 1's turn";
-                            UpdateResult("Player 2 fouled\nPlayer 1 can put cue ball anywhere");
+                            resultText.text = "Player 2 fouled\nPlayer 1 can put cue ball anywhere";
                             // Set condition where player 1 can place cueBall during GameState.Pending2Turn && CueBall.HitState.Foul
                             break;
 
@@ -311,10 +315,4 @@ public class GameHandler : MonoBehaviour {
 		return result;
 	}
 
-    IEnumerator UpdateResult(string text)
-    {
-        resultText.text = text;
-        yield return new WaitForSeconds(3);
-        resultText.text = "";
-    }
 }
