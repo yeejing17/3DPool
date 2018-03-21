@@ -51,7 +51,7 @@ public class CueBall : MonoBehaviour
 		firstBallHit = 15;
 		foreach (var ball in ballsOnTable)
 		{
-			if (ball.active && firstBallHit > ball.GetComponent<Ball>().ballNumber)
+			if (ball.GetComponent<MeshRenderer>().enabled && firstBallHit > ball.GetComponent<Ball>().ballNumber)
 				firstBallHit = ball.GetComponent<Ball>().ballNumber;
 		}
 
